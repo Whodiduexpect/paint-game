@@ -1,8 +1,6 @@
 #include <spdlog/spdlog.h>
-#include <SDL.h>
+#include "Render.h"
 #include <SDL_image.h>
-#include <stdio.h>
-#include <string>
 
 void init();
 
@@ -14,7 +12,7 @@ SDL_Texture* loadTexture(std::string path);
 
 SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
-SDL_Texture* gTexture = NULL;
+SDL_Texture* atlas_texture = NULL;
 
 void init()
 {
@@ -30,10 +28,10 @@ bool loadMedia()
 {
 	bool success = true;
 
-	gTexture = loadTexture("data/graphics/image-test.png");
-	if(gTexture == NULL)
+	atlas_texture = loadTexture("data/graphics/atlas.png");
+	if(atlas_texture == NULL)
 	{
-		spdlog::critical("Failed to load image \"image-test.png\"! Is data folder missing?");
+		spdlog::critical("Failed to load atlas! Is data folder missing?");
 		success = false;
 	}
 
@@ -42,8 +40,8 @@ bool loadMedia()
 
 void close()
 {
-	SDL_DestroyTexture(gTexture);
-	gTexture = NULL;
+	SDL_DestroyTexture(atlas_texture);
+	atlas_texture = NULL;
 
 	SDL_DestroyRenderer(gRenderer);
 	SDL_DestroyWindow(gWindow);
@@ -74,6 +72,8 @@ int main(int argc, char* args[])
 	init();
 	loadMedia();
 
+	Atlas atlas = Atlas(atlas_texture);
+
 	bool quit = false;
 
 	SDL_Event e;
@@ -91,7 +91,8 @@ int main(int argc, char* args[])
 		}
 
 		SDL_RenderClear(gRenderer);
-		SDL_RenderCopy(gRenderer, gTexture, NULL, NULL);
+		atlas.draw(gRenderer, TextureId::TILE_GRASS, 0, 0);
+		atlas.draw(gRenderer, TextureId::TILE_CONCRETE, 32, 32);
 		SDL_RenderPresent(gRenderer);
 	}
 }
