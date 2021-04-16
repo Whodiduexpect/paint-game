@@ -4,7 +4,7 @@
 
 void init();
 
-bool loadMedia();
+void loadMedia();
 
 void close();
 
@@ -19,23 +19,31 @@ void init()
 	SDL_Init(SDL_INIT_VIDEO);
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 	gWindow = SDL_CreateWindow("Paint Game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_FULLSCREEN_DESKTOP);
+	if (gWindow == NULL)
+	{
+		spdlog::critical("Failed to create window: {}, aborting", SDL_GetError());
+		exit(1);
+	}
 	gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
 	SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 	int imgFlags = IMG_INIT_PNG;
 }
 
-bool loadMedia()
+void loadMedia()
 {
-	bool success = true;
 
 	atlas_texture = loadTexture("data/graphics/atlas.png");
-	if(atlas_texture == NULL)
+	if (atlas_texture == NULL)
 	{
-		spdlog::critical("Failed to load atlas! Is data folder missing?");
-		success = false;
+		spdlog::critical("Failed to load atlas (is the data folder missing?), aborting\nFull Error Message: {}", SDL_GetError());
+		exit(1);
 	}
 
-	return success;
+	else
+	{
+		spdlog::info("Atlas loaded succesfully");
+	}
+	
 }
 
 void close()
@@ -87,6 +95,7 @@ int main(int argc, char* args[])
 			{
 				case SDL_QUIT:
 					quit = true;
+					spdlog::info("Application quit by user");
 			}
 		}
 
