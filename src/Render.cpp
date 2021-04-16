@@ -12,14 +12,14 @@ const SDL_Rect TEXTURE_REGIONS[3] =
     SDL_Rect {32, 0, 32, 32}  // TILE_CONCRETE
 };
 
-void Atlas::draw(SDL_Renderer* renderer, TextureId textureid, int x, int y)
+void Atlas::draw(SDL_Renderer* renderer, TileID tileID, int x, int y)
 {
-    int texture_index = static_cast<int>(textureid);
+    int textureIndex = static_cast<int>(tileID);
 
     dest.x = x;
     dest.y = y;
-    dest.w = TEXTURE_REGIONS[texture_index].w;
-    dest.h = TEXTURE_REGIONS[texture_index].h;
+    dest.w = TEXTURE_REGIONS[textureIndex].w;
+    dest.h = TEXTURE_REGIONS[textureIndex].h;
 
-    SDL_RenderCopy(renderer, img, &TEXTURE_REGIONS[texture_index], &dest);
+    SDL_RenderCopy(renderer, img, &TEXTURE_REGIONS[textureIndex], &dest);
 }

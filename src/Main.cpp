@@ -1,18 +1,15 @@
 #include <spdlog/spdlog.h>
-#include "Render.h"
+#include "Map.h"
 #include <SDL_image.h>
 
 void init();
-
-void loadMedia();
-
+void load_media();
 void close();
 
-SDL_Texture* loadTexture(std::string path);
-
+SDL_Texture* load_texture(std::string path);
 SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
-SDL_Texture* atlas_texture = NULL;
+SDL_Texture* atlasTexture = NULL;
 
 void init()
 {
@@ -29,16 +26,15 @@ void init()
 	int imgFlags = IMG_INIT_PNG;
 }
 
-void loadMedia()
+void load_media()
 {
 
-	atlas_texture = loadTexture("data/graphics/atlas.png");
-	if (atlas_texture == NULL)
+	atlasTexture = load_texture("data/graphics/atlas.png");
+	if (atlasTexture == NULL)
 	{
 		spdlog::critical("Failed to load atlas (is the data folder missing?), aborting\nFull Error Message: {}", SDL_GetError());
 		exit(1);
 	}
-
 	else
 	{
 		spdlog::info("Atlas loaded succesfully");
@@ -48,8 +44,8 @@ void loadMedia()
 
 void close()
 {
-	SDL_DestroyTexture(atlas_texture);
-	atlas_texture = NULL;
+	SDL_DestroyTexture(atlasTexture);
+	atlasTexture = NULL;
 
 	SDL_DestroyRenderer(gRenderer);
 	SDL_DestroyWindow(gWindow);
@@ -60,7 +56,7 @@ void close()
 	SDL_Quit();
 }
 
-SDL_Texture* loadTexture(std::string path)
+SDL_Texture* load_texture(std::string path)
 {
 	SDL_Texture* newTexture = NULL;
 	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
@@ -78,15 +74,21 @@ int main(int argc, char* args[])
     spdlog::info("Initializing PaintGame v0.0.1");
     
 	init();
-	loadMedia();
+	load_media();
 
-	Atlas atlas = Atlas(atlas_texture);
+	Atlas atlas = Atlas(atlasTexture);
+	Map map;
+
+	map.generate_chunk(std::make_pair(0, 0));
+	map.generate_chunk(std::make_pair(1, 0));
 
 	bool quit = false;
 
 	SDL_Event e;
 
 	spdlog::info("Loading done");
+
+	// Game loop
 	while(!quit)
 	{
 		while(SDL_PollEvent(&e) != 0)
@@ -100,8 +102,10 @@ int main(int argc, char* args[])
 		}
 
 		SDL_RenderClear(gRenderer);
-		atlas.draw(gRenderer, TextureId::TILE_GRASS, 0, 0);
-		atlas.draw(gRenderer, TextureId::TILE_CONCRETE, 32, 32);
+		map.render_chunk(gRenderer, &atlas, std::make_pair(0, 0));
+		map.render_chunk(gRenderer, &atlas, std::make_pair(1, 0));
 		SDL_RenderPresent(gRenderer);
 	}
+	
+	close();
 }

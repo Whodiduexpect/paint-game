@@ -1,7 +1,7 @@
 #pragma once
 #include <SDL.h>
 
-enum class TextureId
+enum class TileID
 {
     NONE,
     TILE_GRASS,
@@ -15,5 +15,5 @@ class Atlas
         SDL_Rect src, dest;
     public:
         Atlas(SDL_Texture* img);
-        void draw(SDL_Renderer* renderer, TextureId textureid, int x, int y);
+        void draw(SDL_Renderer* renderer, TileID tileID, int x, int y);
 };
