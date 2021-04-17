@@ -60,7 +60,6 @@ SDL_Texture* load_texture(std::string path)
 {
 	SDL_Texture* newTexture = NULL;
 	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
-	loadedSurface == NULL;
 
 	newTexture = SDL_CreateTextureFromSurface(gRenderer, loadedSurface);
 	SDL_FreeSurface(loadedSurface);
