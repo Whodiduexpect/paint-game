@@ -40,3 +40,33 @@ void Map::render_chunk(SDL_Renderer* renderer, Atlas* atlas, std::pair<int, int>
         }
     }
 }
+
+void Map::Player::render(SDL_Renderer* renderer, Atlas* atlas)
+{
+    atlas->draw(renderer, TileID::PLAYER, x, y);
+}
+
+void Map::Player::do_tick(float deltaT)
+{
+    const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
+
+    if (currentKeyStates[SDL_SCANCODE_W])
+    {
+        y -= 1000.0f * deltaT;
+    }
+
+    if (currentKeyStates[SDL_SCANCODE_S])
+    {
+        y += 1000.0f * deltaT;
+    }
+
+    if (currentKeyStates[SDL_SCANCODE_A])
+    {
+        x -= 1000.0f * deltaT;
+    }
+
+    if (currentKeyStates[SDL_SCANCODE_D])
+    {
+        x += 1000.0f * deltaT;
+    }
+}
