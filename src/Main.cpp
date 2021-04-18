@@ -91,7 +91,7 @@ int main(int argc, char* args[])
 	Map map;
 	Map::Player player;
 
-	// Generate two chunks for testing purpses
+	// Generate two chunks for testing purposes
 	// (there is no system yet that automatically picks nearby chunks)
 	map.generate_chunk(std::make_pair(0, 0));
 	map.generate_chunk(std::make_pair(1, 0));
