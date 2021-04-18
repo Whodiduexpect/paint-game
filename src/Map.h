@@ -19,7 +19,7 @@ class Map
                 float x = 0;
                 float y = 0;
                 void render(SDL_Renderer* renderer, Atlas* atlas);
-                void do_tick(float deltaT);
+                void do_tick(float deltaT, const Uint8* keyStates);
         };
 
         std::map<std::pair<int, int>, Chunk> chunks;

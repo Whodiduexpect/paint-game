@@ -46,26 +46,26 @@ void Map::Player::render(SDL_Renderer* renderer, Atlas* atlas)
     atlas->draw(renderer, TileID::PLAYER, x, y);
 }
 
-void Map::Player::do_tick(float deltaT)
+void Map::Player::do_tick(float deltaT, const Uint8* keyStates)
 {
-    const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
 
-    if (currentKeyStates[SDL_SCANCODE_W])
+    if (keyStates[SDL_SCANCODE_W] || keyStates[SDL_SCANCODE_UP])
     {
         y -= 1000.0f * deltaT;
     }
 
-    if (currentKeyStates[SDL_SCANCODE_S])
-    {
-        y += 1000.0f * deltaT;
-    }
 
-    if (currentKeyStates[SDL_SCANCODE_A])
+    if (keyStates[SDL_SCANCODE_A] || keyStates[SDL_SCANCODE_LEFT])
     {
         x -= 1000.0f * deltaT;
     }
 
-    if (currentKeyStates[SDL_SCANCODE_D])
+    if (keyStates[SDL_SCANCODE_S] || keyStates[SDL_SCANCODE_DOWN])
+    {
+        y += 1000.0f * deltaT;
+    }
+
+    if (keyStates[SDL_SCANCODE_D] || keyStates[SDL_SCANCODE_RIGHT])
     {
         x += 1000.0f * deltaT;
     }

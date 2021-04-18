@@ -16,6 +16,9 @@ void init()
 {
 	Uint32 start = SDL_GetTicks();
 
+	spdlog::set_pattern("%^[%T %l]: %v%$");
+    spdlog::info("Initializing PaintGame v0.0.1");
+
 	SDL_Init(SDL_INIT_VIDEO);
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 	gWindow = SDL_CreateWindow("Paint Game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_FULLSCREEN_DESKTOP);
@@ -24,9 +27,12 @@ void init()
 		spdlog::critical("Failed to create window: {}, aborting", SDL_GetError());
 		exit(1);
 	}
+
 	gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
 	SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 	int imgFlags = IMG_INIT_PNG;
+
+	load_media();
 }
 
 void load_media()
@@ -63,6 +69,10 @@ SDL_Texture* load_texture(std::string path)
 {
 	SDL_Texture* newTexture = NULL;
 	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
+	if (!loadedSurface)
+	{
+		spdlog::error("Failed to load texture {0}: {1}", path, SDL_GetError());
+	}
 
 	newTexture = SDL_CreateTextureFromSurface(gRenderer, loadedSurface);
 	SDL_FreeSurface(loadedSurface);
@@ -74,16 +84,15 @@ Uint32 lastTick = SDL_GetTicks();
 
 int main(int argc, char* args[]) 
 {
-    spdlog::set_pattern("%^[%T %l]: %v%$");
-    spdlog::info("Initializing PaintGame v0.0.1");
-    
+
 	init();
-	load_media();
 
 	Atlas atlas = Atlas(atlasTexture);
 	Map map;
 	Map::Player player;
 
+	// Generate two chunks for testing purpses
+	// (there is no system yet that automatically picks nearby chunks)
 	map.generate_chunk(std::make_pair(0, 0));
 	map.generate_chunk(std::make_pair(1, 0));
 
@@ -107,22 +116,28 @@ int main(int argc, char* args[])
 			}
 		}
 
-		// Tick Delta
+		// Calculate time since last tick/frame (delta tick)
 		float current = SDL_GetTicks();
 		float deltaT = (current - lastTick) / 1000.f;
+		
+		// Get keystates (keyboard input)
+		const Uint8* keyStates = SDL_GetKeyboardState(NULL);
 
-		player.do_tick(deltaT);
+		// Process input
+		player.do_tick(deltaT, keyStates);
 		atlas.cOffsetX = player.x;
 		atlas.cOffsetY = player.y;
 
+		// Render
 		SDL_RenderClear(gRenderer);
+
 		map.render_chunk(gRenderer, &atlas, std::make_pair(0, 0));
 		map.render_chunk(gRenderer, &atlas, std::make_pair(1, 0));
-		
 		player.render(gRenderer, &atlas);
 
 		SDL_RenderPresent(gRenderer);
 
+		// Update last tick
 		lastTick = current;
 	}
 	

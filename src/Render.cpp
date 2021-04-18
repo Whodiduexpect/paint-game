@@ -13,6 +13,8 @@ const SDL_Rect TEXTURE_REGIONS[4] =
     SDL_Rect {64, 0, 32, 32}  // PLAYER
 };
 
+// Draws to the screen WITHOUT accounting for 0 0 being the top left
+// and camera position
 void Atlas::draw_raw(SDL_Renderer* renderer, TileID tileID, float x, float y)
 {
     int textureIndex = static_cast<int>(tileID);
@@ -25,9 +27,10 @@ void Atlas::draw_raw(SDL_Renderer* renderer, TileID tileID, float x, float y)
     SDL_RenderCopy(renderer, img, &TEXTURE_REGIONS[textureIndex], &dest);
 }
 
+// Makes 0 0 the center of the screen and accounts for camera position
 void Atlas::draw(SDL_Renderer* renderer, TileID tileid, float x, float y)
 {
     SDL_GetCurrentDisplayMode(0, &displayM);
     
-    draw_raw(renderer, tileid, (x + displayM.w / 2) + cOffsetX*-1, (y + displayM.h / 2) + cOffsetY*-1);
+    draw_raw(renderer, tileid, (x + displayM.w / 2) + cOffsetX * -1, (y + displayM.h / 2) + cOffsetY * -1);
 }
