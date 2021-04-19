@@ -21,8 +21,8 @@ void Atlas::draw_raw(SDL_Renderer* renderer, TileID tileID, float x, float y)
 
     dest.x = x;
     dest.y = y;
-    dest.w = TEXTURE_REGIONS[textureIndex].w;
-    dest.h = TEXTURE_REGIONS[textureIndex].h;
+    dest.w = TEXTURE_REGIONS[textureIndex].w * zoom;
+    dest.h = TEXTURE_REGIONS[textureIndex].h * zoom;
 
     SDL_RenderCopy(renderer, img, &TEXTURE_REGIONS[textureIndex], &dest);
 }
@@ -30,7 +30,11 @@ void Atlas::draw_raw(SDL_Renderer* renderer, TileID tileID, float x, float y)
 // Makes 0 0 the center of the screen and accounts for camera position
 void Atlas::draw(SDL_Renderer* renderer, TileID tileid, float x, float y)
 {
+
     SDL_GetCurrentDisplayMode(0, &displayM);
+
+    x = (x + cOffsetX * -1) * (32 * zoom) + displayM.w / 2;
+    y = (y + cOffsetY * -1) * (32 * zoom) + displayM.h / 2;
     
-    draw_raw(renderer, tileid, (x + displayM.w / 2) + cOffsetX * -1, (y + displayM.h / 2) + cOffsetY * -1);
+    draw_raw(renderer, tileid, x, y);
 }

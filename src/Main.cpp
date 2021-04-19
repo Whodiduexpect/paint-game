@@ -20,7 +20,7 @@ void init()
     spdlog::info("Initializing PaintGame v0.0.1");
 
 	SDL_Init(SDL_INIT_VIDEO);
-	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 	gWindow = SDL_CreateWindow("Paint Game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_FULLSCREEN_DESKTOP);
 	if (!gWindow)
 	{
@@ -30,6 +30,7 @@ void init()
 
 	gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
 	SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+
 	int imgFlags = IMG_INIT_PNG;
 
 	load_media();
@@ -113,6 +114,20 @@ int main(int argc, char* args[])
 					quit = true;
 					spdlog::info("Application quit by user");
 					break;
+				
+				case SDL_MOUSEWHEEL:
+					// Tried to implement exponetial interpolation but failed
+					atlas.zoom += e.wheel.y * 0.5f;
+
+					if (atlas.zoom < 1.0f)
+					{
+						atlas.zoom = 1;
+					}
+					else if (atlas.zoom > 12.0f)
+					{
+						atlas.zoom = 12;
+					}
+
 			}
 		}
 
@@ -125,8 +140,8 @@ int main(int argc, char* args[])
 
 		// Process input
 		player.do_tick(deltaT, keyStates);
-		atlas.cOffsetX = player.x;
-		atlas.cOffsetY = player.y;
+		atlas.cOffsetX = player.x + 0.5;
+		atlas.cOffsetY = player.y + 0.5;
 
 		// Render
 		SDL_RenderClear(gRenderer);

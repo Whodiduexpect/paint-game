@@ -19,6 +19,7 @@ class Atlas
         Atlas(SDL_Texture* img);
         void draw_raw(SDL_Renderer* renderer, TileID tileID, float x, float y);
         void draw(SDL_Renderer* renderer, TileID tileID, float x, float y);
+        float zoom = 2;
         float cOffsetX = 0;
         float cOffsetY = 0;
 };

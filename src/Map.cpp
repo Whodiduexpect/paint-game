@@ -35,7 +35,7 @@ void Map::render_chunk(SDL_Renderer* renderer, Atlas* atlas, std::pair<int, int>
             }
             else
             {
-              atlas->draw(renderer, chunk.tiles[i][j], (i + chunkID.first * 32) * 32, (j + chunkID.second * 32) * 32);  
+              atlas->draw(renderer, chunk.tiles[i][j], (i + chunkID.first * 32), (j + chunkID.second * 32));  
             }
         }
     }
@@ -51,22 +51,22 @@ void Map::Player::do_tick(float deltaT, const Uint8* keyStates)
 
     if (keyStates[SDL_SCANCODE_W] || keyStates[SDL_SCANCODE_UP])
     {
-        y -= 1000.0f * deltaT;
+        y -= speed * deltaT;
     }
 
 
     if (keyStates[SDL_SCANCODE_A] || keyStates[SDL_SCANCODE_LEFT])
     {
-        x -= 1000.0f * deltaT;
+        x -= speed * deltaT;
     }
 
     if (keyStates[SDL_SCANCODE_S] || keyStates[SDL_SCANCODE_DOWN])
     {
-        y += 1000.0f * deltaT;
+        y += speed * deltaT;
     }
 
     if (keyStates[SDL_SCANCODE_D] || keyStates[SDL_SCANCODE_RIGHT])
     {
-        x += 1000.0f * deltaT;
+        x += speed * deltaT;
     }
 }
