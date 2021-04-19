@@ -29,7 +29,7 @@ void init()
 	}
 
 	gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
-	SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+	SDL_SetRenderDrawColor(gRenderer, 176, 214, 245, 0xFF);
 
 	int imgFlags = IMG_INIT_PNG;
 
@@ -146,8 +146,7 @@ int main(int argc, char* args[])
 		// Render
 		SDL_RenderClear(gRenderer);
 
-		map.render_chunk(gRenderer, &atlas, std::make_pair(0, 0));
-		map.render_chunk(gRenderer, &atlas, std::make_pair(1, 0));
+		map.render_chunk_view(gRenderer, &atlas, player.x, player.y);
 		player.render(gRenderer, &atlas);
 
 		SDL_RenderPresent(gRenderer);

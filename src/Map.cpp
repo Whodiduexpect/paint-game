@@ -17,15 +17,28 @@ void Map::generate_chunk(std::pair<int, int> chunkID)
             {
                 chunk.tiles[i][j] = TileID::TILE_GRASS;
             }
+
+            if (i == 0 || j == 0)
+            {
+                chunk.tiles[i][j] = TileID::TILE_CONCRETE;
+            }
         }
     }
 
+    chunk.generated = true;
     chunks.insert(std::make_pair(chunkID, chunk));
 }
 
 void Map::render_chunk(SDL_Renderer* renderer, Atlas* atlas, std::pair<int, int> chunkID)
 {
     Chunk chunk = chunks.find(chunkID)->second;
+
+    if (!chunk.generated)
+    {
+        generate_chunk(chunkID);
+        chunk = chunks.find(chunkID)->second;
+    }
+
     for (int i = 0; i < 32; i++) {
         for (int j = 0; j < 32; j++)
         {
@@ -44,6 +57,28 @@ void Map::render_chunk(SDL_Renderer* renderer, Atlas* atlas, std::pair<int, int>
 void Map::Player::render(SDL_Renderer* renderer, Atlas* atlas)
 {
     atlas->draw(renderer, TileID::PLAYER, x, y);
+}
+
+std::pair<int, int> Map::get_chunk(float x, float y)
+{
+    return std::make_pair((int)floor((float)x / 32), (int)floor((float)y / 32));
+}
+
+void Map::render_chunk_view(SDL_Renderer* renderer, Atlas* atlas, float x, float y)
+{
+    std::pair<int, int> mChunk = get_chunk(x, y);
+
+    render_chunk(renderer, atlas, mChunk);
+
+    // Render all neighboring chunks
+    render_chunk(renderer, atlas, std::make_pair(mChunk.first+1, mChunk.second));
+    render_chunk(renderer, atlas, std::make_pair(mChunk.first, mChunk.second + 1));
+    render_chunk(renderer, atlas, std::make_pair(mChunk.first + 1, mChunk.second + 1));
+    render_chunk(renderer, atlas, std::make_pair(mChunk.first - 1, mChunk.second));
+    render_chunk(renderer, atlas, std::make_pair(mChunk.first, mChunk.second - 1));
+    render_chunk(renderer, atlas, std::make_pair(mChunk.first - 1, mChunk.second - 1));
+    render_chunk(renderer, atlas, std::make_pair(mChunk.first + 1, mChunk.second - 1));
+    render_chunk(renderer, atlas, std::make_pair(mChunk.first - 1, mChunk.second + 1));
 }
 
 void Map::Player::do_tick(float deltaT, const Uint8* keyStates)
