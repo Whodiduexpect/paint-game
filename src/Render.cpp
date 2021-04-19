@@ -8,9 +8,9 @@ Atlas::Atlas(SDL_Texture* img)
 const SDL_Rect TEXTURE_REGIONS[4] =
 {
     SDL_Rect {0, 0, 0, 0},    // NONE
-    SDL_Rect {0, 0, 32, 32},  // TILE_GRASS
-    SDL_Rect {32, 0, 32, 32}, // TILE_CONCRETE
-    SDL_Rect {64, 0, 32, 32}  // PLAYER
+    SDL_Rect {0, 0, 32, 32},  // PLAYER
+    SDL_Rect {32, 0, 32, 32}, // TILE_GRASS
+    SDL_Rect {64, 0, 32, 32}  // TILE_CONCRETE
 };
 
 // Draws to the screen WITHOUT accounting for 0 0 being the top left

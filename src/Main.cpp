@@ -14,7 +14,7 @@ SDL_Texture* atlasTexture = NULL;
 
 void init()
 {
-	Uint32 start = SDL_GetTicks();
+	start = SDL_GetTicks();
 
 	spdlog::set_pattern("%^[%T %l]: %v%$");
     spdlog::info("Initializing PaintGame v0.0.1");
