@@ -28,7 +28,7 @@ void init()
 		exit(1);
 	}
 
-	gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
+	gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	SDL_SetRenderDrawColor(gRenderer, 176, 214, 245, 0xFF);
 
 	int imgFlags = IMG_INIT_PNG;
@@ -91,11 +91,6 @@ int main(int argc, char* args[])
 	Atlas atlas = Atlas(atlasTexture);
 	Map map;
 	Map::Player player;
-
-	// Generate two chunks for testing purposes
-	// (there is no system yet that automatically picks nearby chunks)
-	map.generate_chunk(std::make_pair(0, 0));
-	map.generate_chunk(std::make_pair(1, 0));
 
 	bool quit = false;
 
