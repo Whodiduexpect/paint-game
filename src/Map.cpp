@@ -1,6 +1,8 @@
 #include "Map.h"
 #include <spdlog/spdlog.h>
 
+#include <SDL_opengl.h>
+
 void Map::generate_chunk(std::pair<int, int> chunkID)
 {
     Chunk chunk;
