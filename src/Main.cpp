@@ -213,7 +213,7 @@ int main(int argc, char* args[])
 
 	bool renderWireframe = false;
 	bool overlayOpen = true;
-	bool enableVsync = true;
+	bool enableVSync = true;
 
 	// Game loop
 	while(!quit)
@@ -282,7 +282,7 @@ int main(int argc, char* args[])
 				}
 			}
 			ImGui::Checkbox("Render Wireframe", &renderWireframe);
-			ImGui::Checkbox("Enable Vsync", &enableVsync);
+			ImGui::Checkbox("Enable VSync", &enableVSync);
 		}
 		ImGui::End();
 
@@ -330,7 +330,7 @@ int main(int argc, char* args[])
 		ImGui::Render();
 
 		// Render Settings
-		SDL_GL_SetSwapInterval(enableVsync);
+		SDL_GL_SetSwapInterval(enableVSync);
 		// Render
 		glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
 		glClearColor(clearColor.x * clearColor.w, clearColor.y * clearColor.w, clearColor.z * clearColor.w, clearColor.w);
